@@ -1,17 +1,18 @@
+import json
 from wsgiref.simple_server import make_server
 from app import Frameworkapp
 
 app = Frameworkapp()
 
+def load_user():
+    with open("user.json", "r") as file:
+        user = json.load(file)
+
+    return user
 
 @app.route("/Boburbek")
 def boburbek(request, response):
     response.text = "yoshi: 17, yili: 2008"
-
-
-from flask import Flask, send_file, abort
-
-app = Flask(__name__)
 
 
 @app.route("/home")
@@ -24,6 +25,35 @@ def home():
 def about():
     text2 = "<h2>This page is localhost page for waitress theme!</h2>"
     return text2
+
+
+@app.route("/u/id")
+def get_info(request, response, id):
+    users = load_user()
+    user = users.get(id, "Bunday user yoq!")
+
+    response.text = json.dumps(user)
+
+
+@app.route("/")
+def index():
+    return """
+    <h1>Asosiy Sahifa</h1>
+    <ul style="font-size: 20px;">
+        <li><a href="/home">🏠 Home</a></li>
+        <li><a href="/about">ℹ️ About</a></li>
+        <li><a href="/muhammadyusuf">👤 astro</a></li>
+        <li><a href="/abdulloh">👤 abdulloh</a></li>
+        <li><a href="/u/123">🆔 Foydalanuvchi ID (misol: 123)</a></li>
+    </ul>
+    """
+
+"""
+    "/home" : home,
+    "/about" : about,
+    "/u/bobur" : user,  
+    "/u/abdulloh" : user
+"""
 
 
 @app.route("/muhammadyusuf")
@@ -50,7 +80,7 @@ def astro_image():
         abort(404)
 
 @app.route("/abdulloh")
-def abdulloh():
+def abu():
     img_tag2 = '<img src="/abdulloh/image" alt="Abdulloh rasmi" width="300"><br>'
 
     info2 = """
@@ -66,7 +96,7 @@ def abdulloh():
 
 
 @app.route("/abdulloh/image")
-def abdulloh_image():
+def abu_image():
     try:
         image_path = r"C:\Users\user\Desktop\Abdulloh2.jpg"
         return send_file(image_path, mimetype="image/jpeg")
