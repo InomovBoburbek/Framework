@@ -4,9 +4,9 @@ from app import Frameworkapp
 app = Frameworkapp()
 
 
-@app.route("/muhammadyusuf")
-def muhammadyusuf(request, response):
-    response.text = "yoshi: 16, yili: 2008"
+@app.route("/Boburbek")
+def boburbek(request, response):
+    response.text = "yoshi: 17, yili: 2008"
 
 
 from flask import Flask, send_file, abort
