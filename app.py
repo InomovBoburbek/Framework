@@ -9,6 +9,7 @@ class Frameworkapp:
         res = self.handle_request(req)
         return  res(environ, start_response)
 
+
     def handle_request(self, req):
         print(req.environ)
         res = Response()
