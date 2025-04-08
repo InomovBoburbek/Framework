@@ -1,43 +1,18 @@
 import json
 from wsgiref.simple_server import make_server
 from app import Frameworkapp
+import mimetypes
 
 app = Frameworkapp()
 
 def load_user():
     with open("user.json", "r") as file:
-        user = json.load(file)
-
-    return user
-
-@app.route("/Boburbek")
-def boburbek(request, response):
-    response.text = "yoshi: 17, yili: 2008"
-
-
-@app.route("/home")
-def home():
-    text = "<h2>Hi you are in the home page!</h2>"
-    return text
-
-
-@app.route("/about")
-def about():
-    text2 = "<h2>This page is localhost page for waitress theme!</h2>"
-    return text2
-
-
-@app.route("/u/id")
-def get_info(request, response, id):
-    users = load_user()
-    user = users.get(id, "Bunday user yoq!")
-
-    response.text = json.dumps(user)
-
+        return json.load(file)
 
 @app.route("/")
-def index():
-    return """
+def index(request, response):
+    response.content_type = "text/html"
+    response.text = """
     <h1>Asosiy Sahifa</h1>
     <ul style="font-size: 20px;">
         <li><a href="/home">🏠 Home</a></li>
@@ -48,61 +23,83 @@ def index():
     </ul>
     """
 
-"""
-    "/home" : home,
-    "/about" : about,
-    "/u/bobur" : user,  
-    "/u/abdulloh" : user
-"""
+@app.route("/home")
+def home(request, response):
+    response.content_type = "text/html"
+    response.text = "<h2>Hi you are in the home page!</h2>"
+
+@app.route("/about")
+def about(request, response):
+    response.content_type = "text/html"
+    response.text = "<h2>This page is localhost page for waitress theme!</h2>"
+
+
+
+@app.route("/u/id")
+def get_info(request, response, id):
+    users = load_user()
+    user = users.get(id, "Bunday user yo‘q!")
+    response.text = json.dumps(user)
+
+@app.route("/admin/id")
+def get_admin(request, response, admin_id):
+    users = load_user()
+    user = users.get(admin_id, "Bunday user yo‘q!")
+    response.text = json.dumps(user)
+
 
 
 @app.route("/muhammadyusuf")
-def astro():
-    img_tag = '<img src="/muhammadyusuf/image" alt="Muhammad Yusuf rasmi" width="300"><br>'
-
-    info = """
+def astro(request, response):
+    response.content_type = "text/html"
+    response.text = """
+        <img src="/muhammadyusuf/image" width="300"><br>
         <h2>G'aybullayev Muhammad Yusuf</h2>
         <p>Yoshi: 17 da<br>
         Qiziqish: Video o'yinlar<br>
-        Hobby: Kod yozish va o'rganish<br>
-        Yoqtirgan kasbim: Dasturchilik<br>
-        Height: 185 cm<br>
-        His book: Strong Feelings, Strong Views</p>
-        """
-    return img_tag + info
+        Hobby: Kod yozish<br>
+        Kasb: Dasturchi<br>
+        Kitobi: Strong Feelings, Strong Views</p>
+    """
 
 @app.route("/muhammadyusuf/image")
-def astro_image():
+def astro_image(request, response):
     try:
-        image_path = r"C:\Users\user\Desktop\muhammadyusuf2.jpg"
-        return send_file(image_path, mimetype="image/jpeg")
+        path = r"C:\Users\user\Desktop\muhammadyusuf2.jpg"
+        with open(path, "rb") as f:
+            content = f.read()
+        response.body = content
+        response.content_type = mimetypes.guess_type(path)[0] or "application/octet-stream"
     except FileNotFoundError:
-        abort(404)
+        response.status = 404
+        response.text = "Rasm topilmadi."
 
 @app.route("/abdulloh")
-def abu():
-    img_tag2 = '<img src="/abdulloh/image" alt="Abdulloh rasmi" width="300"><br>'
-
-    info2 = """
+def abu(request, response):
+    response.content_type = "text/html"
+    response.text = """
+        <img src="/abdulloh/image" width="300"><br>
         <h2>Arslonov Abdulloh</h2>
         <p>Yoshi: 17 da<br>
         Hobby: Cycling<br>
-        Main task: Teaching<br>
-        Zodiac sign: Mountain Goat<br>
-        Height: 185 cm<br>
-        His book: Strong Feelings, Strong Views</p>
-        """
-    return img_tag2 + info2
-
+        Kasb: Teacher<br>
+        Kitobi: Strong Feelings, Strong Views</p>
+    """
 
 @app.route("/abdulloh/image")
-def abu_image():
+def abu_image(request, response):
     try:
-        image_path = r"C:\Users\user\Desktop\Abdulloh2.jpg"
-        return send_file(image_path, mimetype="image/jpeg")
+        path = r"C:\Users\user\Desktop\Abdulloh2.jpg"
+        with open(path, "rb") as f:
+            content = f.read()
+        response.body = content
+        response.content_type = mimetypes.guess_type(path)[0] or "application/octet-stream"
     except FileNotFoundError:
-        abort(404)
+        response.status = 404
+        response.text = "Rasm topilmadi."
 
-
+# Serverni ishga tushurish
 if __name__ == "__main__":
-    app.run(debug=True)
+    with make_server("", 8000, app) as server:
+        print("Server is running at http://localhost:8000")
+        server.serve_forever()
