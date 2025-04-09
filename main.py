@@ -51,6 +51,7 @@ def get_admin(request, response, admin_id):
     user = users.get(admin_id, "Bunday user yo‘q!")
     response.text = json.dumps(user)
 
+
 @app.route("/muhammadyusuf")
 def astro(request, response):
     response.content_type = "text/html"

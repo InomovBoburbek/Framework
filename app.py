@@ -1,5 +1,7 @@
 from webob import Request, Response
 from parse import parse
+
+
 class Frameworkapp:
     def __init__(self):
         self.routes = dict()
@@ -20,7 +22,6 @@ class Frameworkapp:
             else:
                 parsed = parse(path, req.path)
 
-
                 if parsed is not None:
                     handler(req, res, parsed.named.get("id", "Bunday user yo'q!"))
                     is_found = True
@@ -38,4 +39,5 @@ class Frameworkapp:
         def wrapper(handler):
             self.routes[path] = handler
             return handler
+
         return wrapper
