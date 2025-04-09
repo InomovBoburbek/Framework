@@ -1,5 +1,5 @@
 from webob import Request, Response
-
+from parse import parse
 class Frameworkapp:
     def __init__(self):
         self.routes = dict()
@@ -14,6 +14,14 @@ class Frameworkapp:
         path_parts = req.path.strip("/").split("/")
 
         for path, handler in self.routes.items():
+            if path == req.path:
+                handler(req, res)
+            else:
+                parsed = parse(path, req.path)
+
+                if parsed is not None:
+                    handler(req, res, parsed.named.get("id", "Bunday user yo'q!"))
+
             # /u/<id>
             if path == "/u/id" and len(path_parts) == 2 and path_parts[0] == "u":
                 handler(req, res, path_parts[1])

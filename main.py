@@ -5,9 +5,11 @@ import mimetypes
 
 app = Frameworkapp()
 
+
 def load_user():
     with open("user.json", "r") as file:
         return json.load(file)
+
 
 @app.route("/")
 def index(request, response):
@@ -23,16 +25,17 @@ def index(request, response):
     </ul>
     """
 
+
 @app.route("/home")
 def home(request, response):
     response.content_type = "text/html"
     response.text = "<h2>Hi you are in the home page!</h2>"
 
+
 @app.route("/about")
 def about(request, response):
     response.content_type = "text/html"
     response.text = "<h2>This page is localhost page for waitress theme!</h2>"
-
 
 
 @app.route("/u/id")
@@ -41,13 +44,12 @@ def get_info(request, response, id):
     user = users.get(id, "Bunday user yo‘q!")
     response.text = json.dumps(user)
 
+
 @app.route("/admin/id")
 def get_admin(request, response, admin_id):
     users = load_user()
     user = users.get(admin_id, "Bunday user yo‘q!")
     response.text = json.dumps(user)
-
-
 
 @app.route("/muhammadyusuf")
 def astro(request, response):
@@ -62,6 +64,7 @@ def astro(request, response):
         Kitobi: Strong Feelings, Strong Views</p>
     """
 
+
 @app.route("/muhammadyusuf/image")
 def astro_image(request, response):
     try:
@@ -73,6 +76,7 @@ def astro_image(request, response):
     except FileNotFoundError:
         response.status = 404
         response.text = "Rasm topilmadi."
+
 
 @app.route("/abdulloh")
 def abu(request, response):
@@ -86,6 +90,7 @@ def abu(request, response):
         Kitobi: Strong Feelings, Strong Views</p>
     """
 
+
 @app.route("/abdulloh/image")
 def abu_image(request, response):
     try:
@@ -97,6 +102,7 @@ def abu_image(request, response):
     except FileNotFoundError:
         response.status = 404
         response.text = "Rasm topilmadi."
+
 
 # Serverni ishga tushurish
 if __name__ == "__main__":
