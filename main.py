@@ -10,20 +10,21 @@ def load_user():
     with open("user.json", "r") as file:
         return json.load(file)
 
-def load_home():
+def load_bobur():
     with open("bobur.json", "r") as file:
         data = json.load(file)
 
     return data
-cnt = load_home()
+
+cnt = load_bobur()
 
 @app.route("/home")
 def home(request, response):
     global cnt
     cnt += 1
-    with open
-    response.content_type = "text/html"
-    response.text = f"<h2>Hi you are in the home page!</h2> {cnt}"
+    with open("bobur.json", "w") as file:
+        json.dump(cnt, file)
+    response.text = f"Home pagedan uyquli salom! - {cnt}"
 
 
 
