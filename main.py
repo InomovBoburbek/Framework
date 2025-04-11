@@ -10,26 +10,21 @@ def load_user():
     with open("user.json", "r") as file:
         return json.load(file)
 
+def load_home():
+    with open("bobur.json", "r") as file:
+        data = json.load(file)
 
-@app.route("/")
-def index(request, response):
-    response.content_type = "text/html"
-    response.text = """
-    <h1>Asosiy Sahifa</h1>
-    <ul style="font-size: 20px;">
-        <li><a href="/home">🏠 Home</a></li>
-        <li><a href="/about">ℹ️ About</a></li>
-        <li><a href="/muhammadyusuf">👤 astro</a></li>
-        <li><a href="/abdulloh">👤 abdulloh</a></li>
-        <li><a href="/u/123">🆔 Foydalanuvchi ID (misol: 123)</a></li>
-    </ul>
-    """
-
+    return data
+cnt = load_home()
 
 @app.route("/home")
 def home(request, response):
+    global cnt
+    cnt += 1
+    with open
     response.content_type = "text/html"
-    response.text = "<h2>Hi you are in the home page!</h2>"
+    response.text = f"<h2>Hi you are in the home page!</h2> {cnt}"
+
 
 
 @app.route("/about")
