@@ -1,5 +1,4 @@
 import json
-from wsgiref.simple_server import make_server
 from app import Frameworkapp
 import mimetypes
 
@@ -10,13 +9,16 @@ def load_user():
     with open("user.json", "r") as file:
         return json.load(file)
 
+
 def load_bobur():
     with open("bobur.json", "r") as file:
         data = json.load(file)
 
     return data
 
+
 cnt = load_bobur()
+
 
 @app.route("/home")
 def home(request, response):
@@ -27,11 +29,21 @@ def home(request, response):
     response.text = f"Home pagedan uyquli salom! - {cnt}"
 
 
+def load_about2():
+    with open("about2.json", "r") as file:
+        data = json.load(file)
+
+    return data
+
 
 @app.route("/about")
 def about(request, response):
+    global cnt
+    cnt += 1
+    with open("about2.json", "w") as file:
+        json.dump(cnt, file)
     response.content_type = "text/html"
-    response.text = "<h2>This page is localhost page for waitress theme!</h2>"
+    response.text = f"<h2>This page is localhost page for waitress theme!</h2> - {cnt}"
 
 
 @app.route("/u/id")
@@ -100,9 +112,3 @@ def abu_image(request, response):
         response.status = 404
         response.text = "Rasm topilmadi."
 
-
-# Serverni ishga tushurish
-if __name__ == "__main__":
-    with make_server("", 8000, app) as server:
-        print("Server is running at http://localhost:8000")
-        server.serve_forever()
