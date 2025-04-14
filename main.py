@@ -1,6 +1,5 @@
 import json
 from app import Frameworkapp
-import mimetypes
 
 app = Frameworkapp()
 
@@ -13,60 +12,56 @@ def load_user():
 def load_bobur():
     with open("bobur.json", "r") as file:
         data = json.load(file)
-
     return data
 
 
-cnt = load_bobur()
+def save_bobur(data):
+    with open("bobur.json", "w") as file:
+        json.dump(data, file, indent=4)
 
 
 @app.route("/home")
 def home(request, response):
-    global cnt
-    cnt += 1
-    with open("bobur.json", "w") as file:
-        json.dump(cnt, file)
-    response.text = f"Home pagedan uyquli salom! - {cnt}"
-
-
-def load_about2():
-    with open("about2.json", "r") as file:
-        data = json.load(file)
-
-    return data
+    data = load_bobur()
+    data["bobur"] += 1
+    save_bobur(data)
+    response.text = f"Home pagedan uyquli salom! - {data['bobur']}"
 
 
 @app.route("/about")
 def about(request, response):
-    global cnt
-    cnt += 1
-    with open("about2.json", "w") as file:
-        json.dump(cnt, file)
-    response.content_type = "text/html"
-    response.text = f"<h2>This page is localhost page for waitress theme!</h2> - {cnt}"
-
-def load_id1():
-    with open("id1.json", "r") as file:
-        data = json.load(file)
-
-    return data
+    data = load_bobur()
+    data["bobur2"] += 1
+    save_bobur(data)
+    response.text = f"About paged salom! - {data['bobur2']}"
 
 
-@app.route("/u/id")
+@app.route("/u/<id>")
 def get_info(request, response, id):
-    global cnt
-    cnt += 1
-    with open("id1.json", "w") as file:
-        json.dump(cnt, file)
     users = load_user()
-    user = users.get(id, f"Bunday user yo‘q! - {cnt}")
+    user = users.get(id, "Bunday user yo‘q!")
+
+    data = load_bobur()
+    if id not in data:
+        data[id] = 0
+    data[id] += 1
+    save_bobur(data)
+
     response.text = json.dumps(user)
 
 
-@app.route("/admin/id")
+@app.route("/admin/<admin_id>")
 def get_admin(request, response, admin_id):
     users = load_user()
     user = users.get(admin_id, "Bunday user yo‘q!")
+
+    data = load_bobur()
+    key = f"admin_{admin_id}"
+    if key not in data:
+        data[key] = 0
+    data[key] += 1
+    save_bobur(data)
+
     response.text = json.dumps(user)
 
 
@@ -91,7 +86,7 @@ def astro_image(request, response):
         with open(path, "rb") as f:
             content = f.read()
         response.body = content
-        response.content_type = mimetypes.guess_type(path)[0] or "application/octet-stream"
+        response.content_type = "image/jpeg"
     except FileNotFoundError:
         response.status = 404
         response.text = "Rasm topilmadi."
@@ -117,8 +112,7 @@ def abu_image(request, response):
         with open(path, "rb") as f:
             content = f.read()
         response.body = content
-        response.content_type = mimetypes.guess_type(path)[0] or "application/octet-stream"
+        response.content_type = "image/jpeg"
     except FileNotFoundError:
         response.status = 404
         response.text = "Rasm topilmadi."
-
