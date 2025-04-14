@@ -1,12 +1,12 @@
 {
-  "1": {
-    "name": "Zoir",
-    "age": 17,
-    "view": 0
-  },
-  "2": {
-    "name": "Abdulloh",
-    "age": 100,
-    "view2": 0
-  }
+    "1": {
+        "name": "Zoir",
+        "age": 17,
+        "view": 5
+    },
+    "2": {
+        "name": "Abdulloh",
+        "age": 100,
+        "view": 0
+    }
 }

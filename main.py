@@ -20,6 +20,11 @@ def save_bobur(data):
         json.dump(data, file, indent=4)
 
 
+def save_user(users):
+    with open("user.json", "w") as file:
+        json.dump(users, file, indent=4)
+
+
 @app.route("/home")
 def home(request, response):
     data = load_bobur()
@@ -36,32 +41,18 @@ def about(request, response):
     response.text = f"About paged salom! - {data['bobur2']}"
 
 
-@app.route("/u/<id>")
+@app.route("/u/{id}")
 def get_info(request, response, id):
     users = load_user()
+
+    if id not in users:
+        users[id] = {"view": 1}
+    else:
+        users[id]["view"] += 1
+
+    save_user(users)
+
     user = users.get(id, "Bunday user yo‘q!")
-
-    data = load_bobur()
-    if id not in data:
-        data[id] = 0
-    data[id] += 1
-    save_bobur(data)
-
-    response.text = json.dumps(user)
-
-
-@app.route("/admin/<admin_id>")
-def get_admin(request, response, admin_id):
-    users = load_user()
-    user = users.get(admin_id, "Bunday user yo‘q!")
-
-    data = load_bobur()
-    key = f"admin_{admin_id}"
-    if key not in data:
-        data[key] = 0
-    data[key] += 1
-    save_bobur(data)
-
     response.text = json.dumps(user)
 
 
