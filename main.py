@@ -45,11 +45,21 @@ def about(request, response):
     response.content_type = "text/html"
     response.text = f"<h2>This page is localhost page for waitress theme!</h2> - {cnt}"
 
+def load_id1():
+    with open("id1.json", "r") as file:
+        data = json.load(file)
+
+    return data
+
 
 @app.route("/u/id")
 def get_info(request, response, id):
+    global cnt
+    cnt += 1
+    with open("id1.json", "w") as file:
+        json.dump(cnt, file)
     users = load_user()
-    user = users.get(id, "Bunday user yo‘q!")
+    user = users.get(id, f"Bunday user yo‘q! - {cnt}")
     response.text = json.dumps(user)
 
 
